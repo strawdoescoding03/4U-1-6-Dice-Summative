@@ -929,7 +929,7 @@ namespace _4U_1_6_Dice_Summative
                     Console.WriteLine("You have won this round, but be careful");
                     Console.WriteLine("The Dice Master is growing angrier...");
 
-                    wallet += 0.5 * (evenSumBet);
+                    wallet += (evenSumBet);
                     wins += 1;
                     houseAngerPoints += 4;
                 }
@@ -1154,7 +1154,7 @@ namespace _4U_1_6_Dice_Summative
                     Console.WriteLine("You have won this round, but be careful");
                     Console.WriteLine("The Dice Master is growing angrier...");
 
-                    wallet += 0.5 * (oddSumBet);
+                    wallet += (oddSumBet);
                     wins += 1;
                     houseAngerPoints += 4;
                 }
