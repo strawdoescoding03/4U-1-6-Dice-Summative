@@ -24,20 +24,20 @@ namespace _4U_1_6_Dice_Summative
             Console.WriteLine("==========================================================================");
             Console.WriteLine("In your worldly travels, your unfortunate self has accidentally stumbled");
             Console.WriteLine("into The Gambler's Den, organized by a cruel and cunning ruler.");
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             Console.WriteLine("You were captivated by the beauty of the foreign land...");
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             Console.WriteLine("But now, you're stuck!");
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             Console.WriteLine("There are only two methods of escape: ");
             Console.WriteLine();
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             Console.WriteLine("\t 1) You must win at least one bet against the house");
             Console.WriteLine("\t 2) You are thrown out due to insufficient funds");
             Console.WriteLine();
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             Console.WriteLine("If you manage to win against the house, you may play again if you so dare.");
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             Console.WriteLine("But remember... the Dice Master is exceptionally auspicious.");
             Console.WriteLine("==========================================================================");
             Console.WriteLine();
@@ -49,7 +49,7 @@ namespace _4U_1_6_Dice_Summative
                 Console.WriteLine("You have [1] new task.");
                 Console.WriteLine($"Wallet Set Up Status: {walletSetUpStatus}");
                 Console.WriteLine("Please set up your wallet to proceed?");
-                Console.WriteLine("If you input an invalid responce, wallet will be set to 100.");
+                Console.WriteLine("If you input an invalid responce, wallet will be set to $100.");
                 Console.WriteLine();
                 Console.Write("Press the w key followed by the enter key to set up your wallet: ");
                 strUserChoice = Console.ReadLine();
@@ -192,7 +192,7 @@ namespace _4U_1_6_Dice_Summative
             Console.WriteLine("========================================================================");
             Console.WriteLine("Here are the rules to setting up your wallet");
             Console.WriteLine();
-            Console.WriteLine("\t*Players cannot bring in more than $500 dollars;");
+            Console.WriteLine("\t*Players cannot bring in more than $500, or less than $100;");
             Console.WriteLine("\t   however, they can take out more than $500.");
             Console.WriteLine("\t*You cannot extract money until you have left the Gambler's Den");
             Console.WriteLine("\t*You cannot add a negitive amount of money to your wallet.");
@@ -273,9 +273,9 @@ namespace _4U_1_6_Dice_Summative
                     {
                         Console.WriteLine("How much would you like to enter?");
 
-                        while (!Double.TryParse((Console.ReadLine()), out addMoney) || addMoney < 0 || addMoney > 500)
+                        while (!Double.TryParse((Console.ReadLine()), out addMoney) || addMoney < 100 || addMoney > 500)
                         {
-                            if (addMoney < 0)
+                            if (addMoney < 100)
                             {
                                 Console.Clear();
                                 Console.WriteLine("DICE MASTER: You were unable to follow a simple instruction?!");
@@ -406,6 +406,7 @@ namespace _4U_1_6_Dice_Summative
                 }
                 else
                 {
+                    doublesBet = Math.Round(doublesBet, 2);
                     Console.WriteLine("DICE MASTER: That bet is quite worthy of this one's time");
                     Console.WriteLine("             Much gratitude for a competent opponent");
                     Console.WriteLine("             May the luckiest one here win...");
@@ -632,6 +633,7 @@ namespace _4U_1_6_Dice_Summative
                 }
                 else
                 {
+                    nonDoublesBet = Math.Round(nonDoublesBet, 2);
                     Console.WriteLine("DICE MASTER: That bet is quite worthy of this one's time");
                     Console.WriteLine("             Much gratitude for a competent opponent");
                     Console.WriteLine("             May the luckiest one here win...");
@@ -859,6 +861,7 @@ namespace _4U_1_6_Dice_Summative
                 }
                 else
                 {
+                    evenSumBet = Math.Round(evenSumBet, 2);
                     Console.WriteLine("DICE MASTER: That bet is quite worthy of this one's time");
                     Console.WriteLine("             Much gratitude for a competent opponent");
                     Console.WriteLine("             May the luckiest one here win...");
@@ -1086,6 +1089,7 @@ namespace _4U_1_6_Dice_Summative
                 }
                 else
                 {
+                    oddSumBet = Math.Round(oddSumBet, 2);
                     Console.WriteLine("DICE MASTER: That bet is quite worthy of this one's time");
                     Console.WriteLine("             Much gratitude for a competent opponent");
                     Console.WriteLine("             May the luckiest one here win...");
