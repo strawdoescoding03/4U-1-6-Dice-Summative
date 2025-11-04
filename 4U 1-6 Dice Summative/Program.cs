@@ -1,6 +1,7 @@
 ﻿using _4U_Topic_5._5_Classes;
 using System;
 using System.Drawing;
+using System.Reflection.Emit;
 
 namespace _4U_1_6_Dice_Summative
 {
@@ -13,8 +14,8 @@ namespace _4U_1_6_Dice_Summative
         static void Main(string[] args)
         {
             string walletSetUpStatus = "INCOMPLETE";
-            string userChoice;
-
+            string strUserChoice;
+            int userChoice;
             //Main Menu
 
             Console.Title = "The Gambler's Den";
@@ -51,10 +52,10 @@ namespace _4U_1_6_Dice_Summative
                 Console.WriteLine("If you input an invalid responce, wallet will be set to 100.");
                 Console.WriteLine();
                 Console.Write("Press the w key followed by the enter key to set up your wallet: ");
-                userChoice = Console.ReadLine();
-                userChoice = userChoice.ToLower().Trim();
+                strUserChoice = Console.ReadLine();
+                strUserChoice = strUserChoice.ToLower().Trim();
 
-                if (userChoice != "w")
+                if (strUserChoice != "w")
                 {
                     wallet = 100;
                     walletSetUpComplete = true;
@@ -84,15 +85,87 @@ namespace _4U_1_6_Dice_Summative
                 Console.WriteLine("4) Odd Sum");
                 Console.WriteLine("5) Rules");
                 Console.WriteLine("6) Stats");
-                if(wins >= 1)
+                if (wins >= 1)
                     Console.WriteLine("7) Escape");
-                Console.ReadLine();
-                Console.Clear();
-                
+
+                while (!int.TryParse(Console.ReadLine(), out userChoice) || userChoice < 1 || userChoice > 7 || (userChoice == 7 && wins < 1))
+                {
+                    Console.WriteLine("DICE MASTER: You were unable to follow a SIMPLE instruction?!");
+                    Console.WriteLine($"            Its a NUMBER between 1 AND 7! Try again");
+                    Console.WriteLine("===========================================================");
+                    Console.WriteLine("Oh No! You've angered the Dice Master!");
+                    Console.WriteLine("The angrier the Dice Master, the harder it is to win!");
+                    Console.WriteLine("...Good Luck.");
+                    houseAngerPoints += 2;
+                    Console.WriteLine();
+                    Console.Write("Your requested number: ");
+                }
+
+                strUserChoice = userChoice.ToString();
+
+                switch (strUserChoice)
+                {
+                    case "1":
+                        {
+                            Console.Clear();
+                            Doubles();
+                        }
+                        break;
+
+                    case "2":
+                        {
+                            Console.Clear();
+                            NotDoubles();
+                        }
+                        break;
+                    case "3":
+                        {
+                            Console.Clear();
+                            EvenSum();
+                        }
+                        break;
+                    case "4":
+                        {
+                            Console.Clear();
+                            OddSum();
+                        }
+                        break;
+
+                    case "5":
+                        {
+                            Console.Clear();
+                            Rules();
+                        }
+                        break;
+                    case "6":
+                        {
+                            Console.Clear();
+                            Stats();
+                        }
+                        break;
+                    case "7":
+                        {
+                            Console.Clear();
+                            if (wins >= 1)
+                            {
+                                Console.WriteLine("DICE MASTER: So, you think you can just leave after");
+                                Console.WriteLine("             besting me? Hahaha! Very well, leave");
+                                Console.WriteLine("             while you still can...");
+                                Console.WriteLine("===========================================================");
+                                Console.WriteLine("Congratulations! You have bested the Dice Master!");
+                                Console.WriteLine("You may now leave the Gambler's Den!");
+                                Console.WriteLine("Thank you for playing!");
+                                Console.WriteLine("Press any key to exit...");
+                                Console.ReadLine();
+                                gameOver = true;
+                            }
+
+                            Console.Clear();
+                        }
+                        break;
+                }
             }
         }
-
-
 
         public static void WalletSetUp()
         {
@@ -276,13 +349,15 @@ namespace _4U_1_6_Dice_Summative
         }
 
         public static void Doubles()
-        {            
+        {
             Console.Title = "The Gambler's Den || Doubles";
 
             double doublesBet;
+            bool ongoingGame = true;
             Random generator = new Random();
-            List <ConsoleColor> diceColours;
-
+            List<ConsoleColor> diceColours;
+            int colourIndex;
+            string userChoice;
             diceColours = new List<ConsoleColor>();
 
             diceColours.Add(ConsoleColor.Blue);
@@ -290,98 +365,205 @@ namespace _4U_1_6_Dice_Summative
             diceColours.Add(ConsoleColor.Green);
             diceColours.Add(ConsoleColor.Magenta);
 
-
-
             DieGame die1 = new DieGame();
             DieGame die2 = new DieGame();
 
-            Console.WriteLine(Console.Title);
-            Console.WriteLine("============================");
-            Console.WriteLine("Welcome to the Gambler's Den. You have bet on Doubles");
-            Console.WriteLine();
-            Console.WriteLine("====================================================================");
-            Console.WriteLine("DICE MASTER: Before you can role, place a bet worthy of my time.");
-            if (!Double.TryParse(Console.ReadLine(), out doublesBet) || doublesBet < wallet * 0.07 || doublesBet > wallet)
+            while (ongoingGame)
             {
-                Console.WriteLine("DICE MASTER: Those bets are unworthy of my time.");
-                Console.WriteLine("             Since you are incapible of making a bet on your own");
-                Console.WriteLine("             I'll take it as all or nothing. Sounds fair?");
-                Console.WriteLine("             No? Well, too bad. My patience is running thin ");
+
+
+                Console.WriteLine(Console.Title);
+                Console.WriteLine("============================");
+                Console.WriteLine("Welcome to the Gambler's Den. You have bet on Doubles");
+                Console.WriteLine();
                 Console.WriteLine("====================================================================");
-                doublesBet = wallet;
-                Console.WriteLine($"[SUCCESS] Your bet of {doublesBet.ToString("C")} has been placed");
-                Console.WriteLine($"Dice will roll shortly");
-            }
-            else
-            {
-                Console.WriteLine("DICE MASTER: That bet is quite worthy of this one's time");
-                Console.WriteLine("             Much gratitude for a competent opponent");
-                Console.WriteLine("             May the luckiest one here win...");
-                Console.WriteLine("====================================================================");
-                Console.WriteLine($"[SUCCESS] Your bet of {doublesBet.ToString("C")} has been placed");
-                Console.WriteLine($"Dice will roll shortly");
-            }
-            Console.WriteLine();
-            Console.Write("Press any key to roll the dice");
-            Console.ReadLine();
-            Console.Clear();
-
-            Console.Title ="The Gambler's Den || The Dice House";
-            Console.WriteLine("===================================");
-
-            Console.WriteLine("DICE MASTER: Before we begin, let us choose the colour of our dice");
-            Console.WriteLine("             I'll let you go first... for good luck");
-            Console.WriteLine("====================================================================");
-            die1.Colour = SetColour();
-
-            Console.WriteLine();
-            Console.WriteLine($"DICE MASTER: Good choice. I quite like the colour {die1.Colour.ToString()}");
-            Console.WriteLine("              Now it's my turn.");
-
-
-            for (int i = 0; i < diceColours.Count; i++)
-
-            {
-                foreach (ConsoleColor colour in diceColours)
+                Console.WriteLine("DICE MASTER: Before you can role, place a bet worthy of my time.");
+                if (!Double.TryParse(Console.ReadLine(), out doublesBet) || doublesBet < wallet * 0.07 || doublesBet > wallet)
                 {
-                    if (colour == die1.Colour)
-                    {
-                        diceColours.Remove[i];
-                    }
+                    Console.WriteLine("DICE MASTER: Those bets are unworthy of my time.");
+                    Console.WriteLine("             Since you are incapible of making a bet on your own");
+                    Console.WriteLine("             I'll take it as all or nothing. Sounds fair?");
+                    Console.WriteLine("             No? Well, too bad. My patience is running thin ");
+                    Console.WriteLine("====================================================================");
+                    doublesBet = wallet;
+                    Console.WriteLine($"[SUCCESS] Your bet of {doublesBet.ToString("C")} has been placed");
+                    Console.WriteLine($"Dice will roll shortly");
                 }
-            }
+                else
+                {
+                    Console.WriteLine("DICE MASTER: That bet is quite worthy of this one's time");
+                    Console.WriteLine("             Much gratitude for a competent opponent");
+                    Console.WriteLine("             May the luckiest one here win...");
+                    Console.WriteLine("====================================================================");
+                    Console.WriteLine($"[SUCCESS] Your bet of {doublesBet.ToString("C")} has been placed");
+                    Console.WriteLine($"Dice will roll shortly");
+                }
+                Console.WriteLine();
+                Console.Write("Press any key to roll the dice");
+                Console.ReadLine();
+                Console.Clear();
+
+                Console.Title = "The Gambler's Den || The Dice House";
+                Console.WriteLine("===================================");
+
+                Console.WriteLine("DICE MASTER: Before we begin, let us choose the colour of our dice");
+                Console.WriteLine("             I'll let you go first... for good luck");
+                if (wins >= 1)
+                {
+                    Console.WriteLine("             Its...Its you? Haven't I seen you before?");
+                    Console.WriteLine("             Great. Now I can get my revenge...");
+                }
+                if (losses >= 1)
+                {
+                    Console.WriteLine("             Its...Its you?! You dare show your face?");
+                    Console.WriteLine("             No matter. I'll crush you like the last fool");
+                    Console.WriteLine("             who dared enter my den!");
+                }
+
+                Console.WriteLine("====================================================================");
+                die1.Colour = SetColour();
+
+                Console.WriteLine();
+                Console.WriteLine($"DICE MASTER: Good choice. I quite like the colour {die1.Colour.ToString()}");
+                Console.WriteLine("              Now it's my turn.");
 
 
-            die1.RollDie();
-            die2.RollDie();
+                if (diceColours.Contains(die1.Colour))
+                {
+                    diceColours.Remove(die1.Colour);
+                }
+
+                colourIndex = generator.Next(0, diceColours.Count);
+                die2.Colour = diceColours[colourIndex];
+
+                Console.WriteLine($"DICE MASTER: Hmm.... I think I'll choose {die2.Colour.ToString()}");
+                Console.WriteLine($"DICE MASTER: I think it's time to roll the dice...");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("The Dice Master is ready. Press any key to start the game!");
+                Console.ReadLine();
+
+                die1.RollDie();
+                die2.RollDie();
 
 
-            if (houseAngerPoints > 0)
-            {
+                if (houseAngerPoints > 0)
+                {
+                    if (die1.Roll == die2.Roll)
+                    {
+                        for (int i = 0; i < houseAngerPoints; i++)
+                        {
+                            die1.RollDie();
+                            die2.RollDie();
+                        }
+                    }
+
+                }
+
                 if (die1.Roll == die2.Roll)
                 {
-                   for (int i = 0; i < houseAngerPoints; i++)
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine($"You rolled a {die1.Roll}");
+                    die1.DrawRoll();
+                    Console.WriteLine($"The Dice Master rolled a {die2.Roll}");
+                    die2.DrawRoll();
+                    Console.WriteLine($"The House Forfeits. You scored doubles!");
+
+                    Console.WriteLine("DICE MASTER: How...unexpected...");
+                    Console.WriteLine("             It appears luck is on your side today...");
+                    Console.WriteLine("             Very well, you have won this round.");
+                    Console.WriteLine("             I shall honor your victory... this time.");
+                    Console.WriteLine("             You are free to leave... for now.");
+                    Console.WriteLine();
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine("You have won this round, but be careful");
+                    Console.WriteLine("The Dice Master is growing angrier...");
+
+                    wallet += 2 * (doublesBet);
+                    wins += 1;
+                    houseAngerPoints += 4;
+                }
+
+                else
+                {
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine($"You rolled a {die1.Roll}");
+                    die1.DrawRoll();
+                    Console.WriteLine($"The Dice Master rolled a {die2.Roll}");
+                    die2.DrawRoll();
+                    Console.WriteLine("The House Prevails. You did not score doubles.");
+                    Console.WriteLine("DICE MASTER: Hahaha! Foolish mortal!");
+                    Console.WriteLine("             Did you really think you could best me?");
+                    Console.WriteLine("             Care for another round? I'm just getting started!");
+                    Console.WriteLine("             In the meantime, I'll take what I'm owed.");
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine("You have lost this round, but do not give up!");
+                    Console.WriteLine("The Dice Master can be beaten...");
+                    Console.WriteLine("Losing only makes you stronger! He's less angry, less vengeful");
+
+                    wallet -= doublesBet;
+                    losses += 1;
+                    if (houseAngerPoints > 0)
+                        houseAngerPoints -= 1;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("DICE MASTER: My offer still stands");
+                Console.WriteLine("             Care for another round?");
+                Console.WriteLine();
+                Console.Write("Press y followed by the enter key to play again, or any other key to exit to the Gambler's Den: ");
+                userChoice = Console.ReadLine();
+                userChoice = userChoice.ToLower().Trim();
+                if (userChoice != "y")
+                {
+                    ongoingGame = false;
+                    Console.WriteLine("DICE MASTER: Very well. Return when you are");
+                    Console.WriteLine("             ready to test your luck again.");
+                    Console.WriteLine("===============================================================");
+                    if (wins >= 1)
                     {
-                        die1.RollDie();
-                        die2.RollDie();
+                        Console.WriteLine("Congratulations on your victory!");
+                        Console.WriteLine("You may now leave the Gambler's Den if you so choose.");
+                        Console.WriteLine("Press any key to exit the Dice House");
+                        Console.ReadLine();
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have yet to best the Dice Master.");
+                        Console.WriteLine("Return when you are ready to test your luck again.");
+                        Console.WriteLine("DICE MASTER: I'm waiting... I'll see you soon...");
+                        Console.WriteLine("Press any key to exit the Dice House");
+                        Console.ReadLine();
+                        Console.Clear();
                     }
                 }
 
-            }
+                else if (userChoice == "y")
+                {
+                    Console.Clear();
+                    Console.WriteLine("DICE MASTER: Excellent! Let us begin another round!");
+                    Console.WriteLine("===============================================================");
+                    Console.WriteLine("Prepare yourself...");
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
 
-            if (die1.Roll == die2.Roll)
-            {
-                wallet += 2 * (doublesBet);
-                wins += 1;
-                houseAngerPoints += 4;
-            }
-
-            else
-            {
-                wallet -= doublesBet;
-                losses += 1;
-                if (houseAngerPoints > 0)
-                    houseAngerPoints -= 1;
+                if (wallet <= 0)
+                {
+                    ongoingGame = false;
+                    gameOver = true;
+                    Console.WriteLine("DICE MASTER: It appears you have run out of funds...");
+                    Console.WriteLine("             Perhaps next time you'll be luckier.");
+                    Console.WriteLine("===============================================================");
+                    Console.WriteLine("You have run out of money...");
+                    Console.WriteLine("The Dice Master has thrown you out of the Gambler's Den");
+                    Console.WriteLine("Better luck next time...");
+                    Console.WriteLine("GAME OVER");
+                    Environment.Exit(0);
+                }
             }
 
 
@@ -391,41 +573,221 @@ namespace _4U_1_6_Dice_Summative
         {
             Console.Title = "The Gambler's Den || Not Doubles";
 
-            double doublesBet = 10;
+            double nonDoublesBet;
+            bool ongoingGame = true;
+            Random generator = new Random();
+            List<ConsoleColor> diceColours;
+            int colourIndex;
+            string userChoice;
+            diceColours = new List<ConsoleColor>();
+
+            diceColours.Add(ConsoleColor.Blue);
+            diceColours.Add(ConsoleColor.Red);
+            diceColours.Add(ConsoleColor.Green);
+            diceColours.Add(ConsoleColor.Magenta);
 
             DieGame die1 = new DieGame();
             DieGame die2 = new DieGame();
 
-            die1.RollDie();
-            die2.RollDie();
-
-
-            if (houseAngerPoints > 0)
+            while (ongoingGame)
             {
+
+
+                Console.WriteLine(Console.Title);
+                Console.WriteLine("============================");
+                Console.WriteLine("Welcome to the Gambler's Den. You have bet on Not Doubles!");
+                Console.WriteLine();
+                Console.WriteLine("====================================================================");
+                Console.WriteLine("DICE MASTER: Before you can role, place a bet worthy of my time.");
+                Console.WriteLine("             If you input an invalid responce, all or nothing will be");
+                Console.WriteLine("             assumed.");
+                if (!Double.TryParse(Console.ReadLine(), out nonDoublesBet) || nonDoublesBet < wallet * 0.07 || nonDoublesBet > wallet)
+                {
+                    Console.WriteLine("DICE MASTER: Those bets are unworthy of my time.");
+                    Console.WriteLine("             Since you are incapible of making a bet on your own");
+                    Console.WriteLine("             I'll take it as all or nothing. Sounds fair?");
+                    Console.WriteLine("             No? Well, too bad. My patience is running thin ");
+                    Console.WriteLine("====================================================================");
+                    nonDoublesBet = wallet;
+                    Console.WriteLine($"[SUCCESS] Your bet of {nonDoublesBet.ToString("C")} has been placed");
+                    Console.WriteLine($"Dice will roll shortly");
+                }
+                else
+                {
+                    Console.WriteLine("DICE MASTER: That bet is quite worthy of this one's time");
+                    Console.WriteLine("             Much gratitude for a competent opponent");
+                    Console.WriteLine("             May the luckiest one here win...");
+                    Console.WriteLine("====================================================================");
+                    Console.WriteLine($"[SUCCESS] Your bet of {nonDoublesBet.ToString("C")} has been placed");
+                    Console.WriteLine($"Dice will roll shortly");
+                }
+                Console.WriteLine();
+                Console.Write("Press any key to roll the dice");
+                Console.ReadLine();
+                Console.Clear();
+
+                Console.Title = "The Gambler's Den || The Dice House";
+                Console.WriteLine("===================================");
+
+                Console.WriteLine("DICE MASTER: Before we begin, let us choose the colour of our dice");
+                Console.WriteLine("             I'll let you go first... for good luck...");
+                if (wins >= 1)
+                {
+                    Console.WriteLine("             Its...Its you? Haven't I seen you before?");
+                    Console.WriteLine("             Great. Now I can get my revenge...");
+                }
+                if (losses >= 1)
+                {
+                    Console.WriteLine("             Its...Its you? Haven't I seen you before?");
+                    Console.WriteLine("             No matter. I'll crush you like the last fool");
+                    Console.WriteLine("             who dared enter my den!");
+                }
+                Console.WriteLine("====================================================================");
+                die1.Colour = SetColour();
+
+                Console.WriteLine();
+                Console.WriteLine($"DICE MASTER: Good choice. I quite like the colour {die1.Colour.ToString()}");
+                Console.WriteLine("              Now it's my turn.");
+
+
+                if (diceColours.Contains(die1.Colour))
+                {
+                    diceColours.Remove(die1.Colour);
+                }
+
+                colourIndex = generator.Next(0, diceColours.Count);
+                die2.Colour = diceColours[colourIndex];
+
+                Console.WriteLine($"DICE MASTER: Hmm.... I think I'll choose {die2.Colour.ToString()}");
+                Console.WriteLine($"DICE MASTER: I think it's time to roll the dice...");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("The Dice Master is ready. Press any key to start the game!");
+                Console.ReadLine();
+
+                die1.RollDie();
+                die2.RollDie();
+
+
+                if (houseAngerPoints > 0)
+                {
+                    if (die1.Roll != die2.Roll)
+                    {
+                        for (int i = 0; i < houseAngerPoints; i++)
+                        {
+                            die1.RollDie();
+                            die2.RollDie();
+                        }
+                    }
+
+                }
+
                 if (die1.Roll != die2.Roll)
                 {
-                    for (int i = 0; i < houseAngerPoints; i++)
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine($"You rolled a {die1.Roll}");
+                    die1.DrawRoll();
+                    Console.WriteLine($"The Dice Master rolled a {die2.Roll}");
+                    die2.DrawRoll();
+                    Console.WriteLine($"The House Forfeits. You did not score doubles!");
+
+                    Console.WriteLine("DICE MASTER: Hmm...unexpected...");
+                    Console.WriteLine("             It appears luck is on your side today...");
+                    Console.WriteLine("             It looks like I've been bested.");
+                    Console.WriteLine("             Very well, you have won this round.");
+                    Console.WriteLine("             I shall honor your victory... this time.");
+                    Console.WriteLine("             You are free to leave... for now.");
+                    Console.WriteLine();
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine("You have won this round, but be careful");
+                    Console.WriteLine("The Dice Master is growing angrier...");
+
+                    wallet += 0.5 * (nonDoublesBet);
+                    wins += 1;
+                    houseAngerPoints += 4;
+                }
+
+                else
+                {
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine($"You rolled a {die1.Roll}");
+                    die1.DrawRoll();
+                    Console.WriteLine($"The Dice Master rolled a {die2.Roll}");
+                    die2.DrawRoll();
+                    Console.WriteLine("The House Prevails. You scored doubles! How unlucky.");
+                    Console.WriteLine("DICE MASTER: Hahaha! Foolish mortal!");
+                    Console.WriteLine("             Did you really think you could best me?");
+                    Console.WriteLine("             You thought you could beat THE DICE MASTER?!");
+                    Console.WriteLine("             Care for another round? I'm just getting started!");
+                    Console.WriteLine("             In the meantime, I'll take what I'm owed.");
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine("You have lost this round, but do not give up!");
+                    Console.WriteLine("The Dice Master can be beaten...");
+                    Console.WriteLine("Losing only makes you stronger! He's less angry, less vengeful");
+
+                    wallet -= nonDoublesBet;
+                    losses += 1;
+                    if (houseAngerPoints > 0)
+                        houseAngerPoints -= 1;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("DICE MASTER: My offer still stands");
+                Console.WriteLine("             Care for another round?");
+                Console.WriteLine();
+                Console.Write("Press y followed by the enter key to play again, or any other key to exit to the Gambler's Den: ");
+                userChoice = Console.ReadLine();
+                userChoice = userChoice.ToLower().Trim();
+                if (userChoice != "y")
+                {
+                    ongoingGame = false;
+                    Console.WriteLine("DICE MASTER: Very well. Return when you are");
+                    Console.WriteLine("             ready to test your luck again.");
+                    Console.WriteLine("===============================================================");
+                    if (wins >= 1)
                     {
-                        die1.RollDie();
-                        die2.RollDie();
+                        Console.WriteLine("Congratulations on your victory!");
+                        Console.WriteLine("You may now leave the Gambler's Den if you so choose.");
+                        Console.WriteLine("Press any key to exit the Dice House");
+                        Console.ReadLine();
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have yet to best the Dice Master.");
+                        Console.WriteLine("Return when you are ready to test your luck again.");
+                        Console.WriteLine("DICE MASTER: I'm waiting... I'll see you soon...");
+                        Console.WriteLine("Press any key to exit the Dice House");
+                        Console.ReadLine();
+                        Console.Clear();
                     }
                 }
 
-            }
+                else if (userChoice == "y")
+                {
+                    Console.Clear();
+                    Console.WriteLine("DICE MASTER: Excellent! Let us begin another round!");
+                    Console.WriteLine("===============================================================");
+                    Console.WriteLine("Prepare yourself...");
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
 
-            if (die1.Roll != die2.Roll)
-            {
-                wallet += 0.5f * (doublesBet);
-                wins += 1;
-                houseAngerPoints += 4;
-            }
-
-            else
-            {
-                wallet -= doublesBet;
-                losses += 1;
-                if (houseAngerPoints > 0)
-                    houseAngerPoints -= 1;
+                if (wallet <= 0)
+                {
+                    ongoingGame = false;
+                    gameOver = true;
+                    Console.WriteLine("DICE MASTER: It appears you have run out of funds...");
+                    Console.WriteLine("             Perhaps next time you'll be luckier.");
+                    Console.WriteLine("===============================================================");
+                    Console.WriteLine("You have run out of money...");
+                    Console.WriteLine("The Dice Master has thrown you out of the Gambler's Den");
+                    Console.WriteLine("Better luck next time...");
+                    Console.WriteLine("GAME OVER");
+                    Environment.Exit(0);
+                }
             }
 
 
@@ -434,95 +796,450 @@ namespace _4U_1_6_Dice_Summative
         public static void EvenSum()
         {
             Console.Title = "The Gambler's Den || Even Sum";
-            double doublesBet = 10;
+            double evenSumBet;
             int dieTotal;
+
+            bool ongoingGame = true;
+            Random generator = new Random();
+            List<ConsoleColor> diceColours;
+            int colourIndex;
+            string userChoice;
+            diceColours = new List<ConsoleColor>();
+
+            diceColours.Add(ConsoleColor.Blue);
+            diceColours.Add(ConsoleColor.Red);
+            diceColours.Add(ConsoleColor.Green);
+            diceColours.Add(ConsoleColor.Magenta);
 
             DieGame die1 = new DieGame();
             DieGame die2 = new DieGame();
 
-            die1.RollDie();
-            die2.RollDie();
-
-            dieTotal = die1.Roll + die2.Roll;
-
-
-
-            if (houseAngerPoints > 0)
+            while (ongoingGame)
             {
-                if (dieTotal %2 == 0)
+
+
+                Console.WriteLine(Console.Title);
+                Console.WriteLine("============================");
+                Console.WriteLine("Welcome to the Gambler's Den. You have bet on Even Sum!");
+                Console.WriteLine();
+                Console.WriteLine("====================================================================");
+                Console.WriteLine("DICE MASTER: Before you can role, place a bet worthy of my time.");
+                Console.WriteLine("             If you input an invalid responce, all or nothing will be");
+                Console.WriteLine("             assumed.");
+                if (!Double.TryParse(Console.ReadLine(), out evenSumBet) || evenSumBet < wallet * 0.07 || evenSumBet > wallet)
                 {
-                    for (int i = 0; i < houseAngerPoints; i++)
+                    Console.WriteLine("DICE MASTER: Those bets are unworthy of my time.");
+                    Console.WriteLine("             Since you are incapible of making a bet on your own");
+                    Console.WriteLine("             I'll take it as all or nothing. Sounds fair?");
+                    Console.WriteLine("             No? Well, too bad. My patience is running thin ");
+                    Console.WriteLine("====================================================================");
+                    evenSumBet = wallet;
+                    Console.WriteLine($"[SUCCESS] Your bet of {evenSumBet.ToString("C")} has been placed");
+                    Console.WriteLine($"Dice will roll shortly");
+                }
+                else
+                {
+                    Console.WriteLine("DICE MASTER: That bet is quite worthy of this one's time");
+                    Console.WriteLine("             Much gratitude for a competent opponent");
+                    Console.WriteLine("             May the luckiest one here win...");
+                    Console.WriteLine("====================================================================");
+                    Console.WriteLine($"[SUCCESS] Your bet of {evenSumBet.ToString("C")} has been placed");
+                    Console.WriteLine($"Dice will roll shortly");
+                }
+                Console.WriteLine();
+                Console.Write("Press any key to roll the dice");
+                Console.ReadLine();
+                Console.Clear();
+
+                Console.Title = "The Gambler's Den || The Dice House";
+                Console.WriteLine("===================================");
+
+                Console.WriteLine("DICE MASTER: Before we begin, let us choose the colour of our dice");
+                Console.WriteLine("             I'll let you go first... for good luck...");
+                if (wins >= 1)
+                {
+                    Console.WriteLine("             Its...Its you? Haven't I seen you before?");
+                    Console.WriteLine("             Great. Now I can get my revenge...");
+                }
+                if (losses >= 1)
+                {
+                    Console.WriteLine("             Its...Its you? Haven't I seen you before?");
+                    Console.WriteLine("             No matter. I'll crush you like the last fool");
+                    Console.WriteLine("             who dared enter my den!");
+                }
+                Console.WriteLine("====================================================================");
+                die1.Colour = SetColour();
+
+                Console.WriteLine();
+                Console.WriteLine($"DICE MASTER: Good choice. I quite like the colour {die1.Colour.ToString()}");
+                Console.WriteLine("              Now it's my turn.");
+
+
+                if (diceColours.Contains(die1.Colour))
+                {
+                    diceColours.Remove(die1.Colour);
+                }
+
+                colourIndex = generator.Next(0, diceColours.Count);
+                die2.Colour = diceColours[colourIndex];
+
+                Console.WriteLine($"DICE MASTER: Hmm.... I think I'll choose {die2.Colour.ToString()}");
+                Console.WriteLine($"DICE MASTER: I think it's time to roll the dice...");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("The Dice Master is ready. Press any key to start the game!");
+                Console.ReadLine();
+
+                die1.RollDie();
+                die2.RollDie();
+
+                dieTotal = die1.Roll + die2.Roll;
+
+                if (houseAngerPoints > 0)
+                {
+                    if (dieTotal % 2 == 0)
                     {
-                        die1.RollDie();
-                        die2.RollDie();
+                        for (int i = 0; i < houseAngerPoints; i++)
+                        {
+                            die1.RollDie();
+                            die2.RollDie();
+                        }
+                    }
+
+                }
+
+                dieTotal = die1.Roll + die2.Roll;
+                if (dieTotal % 2 == 0)
+                {
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine($"You rolled a {die1.Roll}");
+                    die1.DrawRoll();
+                    Console.WriteLine($"The Dice Master rolled a {die2.Roll}");
+                    die2.DrawRoll();
+                    Console.WriteLine($"The House Forfeits. You scored an Even Sum!");
+
+                    Console.WriteLine("DICE MASTER: Hmm...unexpected...");
+                    Console.WriteLine("             It appears luck is on your side today...");
+                    Console.WriteLine("             It looks like I've been bested.");
+                    Console.WriteLine("             Very well, you have won this round.");
+                    Console.WriteLine("             I shall honor your victory... this time.");
+                    Console.WriteLine("             You are free to leave... for now.");
+                    Console.WriteLine();
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine("You have won this round, but be careful");
+                    Console.WriteLine("The Dice Master is growing angrier...");
+
+                    wallet += 0.5 * (evenSumBet);
+                    wins += 1;
+                    houseAngerPoints += 4;
+                }
+
+                else
+                {
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine($"You rolled a {die1.Roll}");
+                    die1.DrawRoll();
+                    Console.WriteLine($"The Dice Master rolled a {die2.Roll}");
+                    die2.DrawRoll();
+                    Console.WriteLine("The House Prevails. You scored Odd Sums! How unlucky.");
+                    Console.WriteLine("DICE MASTER: Hahaha! Foolish mortal!");
+                    Console.WriteLine("             Did you really think you could best me?");
+                    Console.WriteLine("             You thought you could beat THE DICE MASTER?!");
+                    Console.WriteLine("             Care for another round? I'm just getting started!");
+                    Console.WriteLine("             In the meantime, I'll take what I'm owed.");
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine("You have lost this round, but do not give up!");
+                    Console.WriteLine("The Dice Master can be beaten...");
+                    Console.WriteLine("Losing only makes you stronger! He's less angry, less vengeful");
+
+                    wallet -= evenSumBet;
+                    losses += 1;
+                    if (houseAngerPoints > 0)
+                        houseAngerPoints -= 1;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("DICE MASTER: My offer still stands");
+                Console.WriteLine("             Care for another round?");
+                Console.WriteLine();
+                Console.Write("Press y followed by the enter key to play again, or any other key to exit to the Gambler's Den: ");
+                userChoice = Console.ReadLine();
+                userChoice = userChoice.ToLower().Trim();
+                if (userChoice != "y")
+                {
+                    ongoingGame = false;
+                    Console.WriteLine("DICE MASTER: Very well. Return when you are");
+                    Console.WriteLine("             ready to test your luck again.");
+                    Console.WriteLine("===============================================================");
+                    if (wins >= 1)
+                    {
+                        Console.WriteLine("Congratulations on your victory!");
+                        Console.WriteLine("You may now leave the Gambler's Den if you so choose.");
+                        Console.WriteLine("Press any key to exit the Dice House");
+                        Console.ReadLine();
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have yet to best the Dice Master.");
+                        Console.WriteLine("Return when you are ready to test your luck again.");
+                        Console.WriteLine("DICE MASTER: I'm waiting... I'll see you soon...");
+                        Console.WriteLine("Press any key to exit the Dice House");
+                        Console.ReadLine();
+                        Console.Clear();
                     }
                 }
 
-            }
+                else if (userChoice == "y")
+                {
+                    Console.Clear();
+                    Console.WriteLine("DICE MASTER: Excellent! Let us begin another round!");
+                    Console.WriteLine("===============================================================");
+                    Console.WriteLine("Prepare yourself...");
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
 
-            dieTotal = die1.Roll + die2.Roll;
-            if (dieTotal % 2 == 0)
-            {
-                wallet += doublesBet;
-                wins += 1;
-                houseAngerPoints += 4;
+                if (wallet <= 0)
+                {
+                    ongoingGame = false;
+                    gameOver = true;
+                    Console.WriteLine("DICE MASTER: It appears you have run out of funds...");
+                    Console.WriteLine("             Perhaps next time you'll be luckier.");
+                    Console.WriteLine("===============================================================");
+                    Console.WriteLine("You have run out of money...");
+                    Console.WriteLine("The Dice Master has thrown you out of the Gambler's Den");
+                    Console.WriteLine("Better luck next time...");
+                    Console.WriteLine("GAME OVER");
+                    Environment.Exit(0);
+                }
             }
-
-            else
-            {
-                wallet -= doublesBet;
-                losses += 1;
-                if (houseAngerPoints > 0)
-                    houseAngerPoints -= 1;
-            }
-
         }
 
         public static void OddSum()
         {
-            double oddSumBet;
             Console.Title = "The Gambler's Den || Odd Sum";
-
-            double doublesBet = 10;
+            double oddSumBet;
             int dieTotal;
+
+            bool ongoingGame = true;
+            Random generator = new Random();
+            List<ConsoleColor> diceColours;
+            int colourIndex;
+            string userChoice;
+            diceColours = new List<ConsoleColor>();
+
+            diceColours.Add(ConsoleColor.Blue);
+            diceColours.Add(ConsoleColor.Red);
+            diceColours.Add(ConsoleColor.Green);
+            diceColours.Add(ConsoleColor.Magenta);
 
             DieGame die1 = new DieGame();
             DieGame die2 = new DieGame();
 
-            die1.RollDie();
-            die2.RollDie();
-
-            dieTotal = die1.Roll + die2.Roll;
-
-
-
-            if (houseAngerPoints > 0)
+            while (ongoingGame)
             {
+
+
+                Console.WriteLine(Console.Title);
+                Console.WriteLine("============================");
+                Console.WriteLine("Welcome to the Gambler's Den. You have bet on Even Sum!");
+                Console.WriteLine();
+                Console.WriteLine("====================================================================");
+                Console.WriteLine("DICE MASTER: Before you can role, place a bet worthy of my time.");
+                Console.WriteLine("             If you input an invalid responce, all or nothing will be");
+                Console.WriteLine("             assumed.");
+                if (!Double.TryParse(Console.ReadLine(), out oddSumBet) || oddSumBet < wallet * 0.07 || oddSumBet > wallet)
+                {
+                    Console.WriteLine("DICE MASTER: Those bets are unworthy of my time.");
+                    Console.WriteLine("             Since you are incapible of making a bet on your own");
+                    Console.WriteLine("             I'll take it as all or nothing. Sounds fair?");
+                    Console.WriteLine("             No? Well, too bad. My patience is running thin ");
+                    Console.WriteLine("====================================================================");
+                    oddSumBet = wallet;
+                    Console.WriteLine($"[SUCCESS] Your bet of {oddSumBet.ToString("C")} has been placed");
+                    Console.WriteLine($"Dice will roll shortly");
+                }
+                else
+                {
+                    Console.WriteLine("DICE MASTER: That bet is quite worthy of this one's time");
+                    Console.WriteLine("             Much gratitude for a competent opponent");
+                    Console.WriteLine("             May the luckiest one here win...");
+                    Console.WriteLine("====================================================================");
+                    Console.WriteLine($"[SUCCESS] Your bet of {oddSumBet.ToString("C")} has been placed");
+                    Console.WriteLine($"Dice will roll shortly");
+                }
+                Console.WriteLine();
+                Console.Write("Press any key to roll the dice");
+                Console.ReadLine();
+                Console.Clear();
+
+                Console.Title = "The Gambler's Den || The Dice House";
+                Console.WriteLine("===================================");
+
+                Console.WriteLine("DICE MASTER: Before we begin, let us choose the colour of our dice");
+                Console.WriteLine("             I'll let you go first... for good luck...");
+                if (wins >= 1)
+                {
+                    Console.WriteLine("             Its...Its you? Haven't I seen you before?");
+                    Console.WriteLine("             Great. Now I can get my revenge...");
+                }
+                if (losses >= 1)
+                {
+                    Console.WriteLine("             Its...Its you? Haven't I seen you before?");
+                    Console.WriteLine("             No matter. I'll crush you like the last fool");
+                    Console.WriteLine("             who dared enter my den!");
+                }
+                Console.WriteLine("====================================================================");
+                die1.Colour = SetColour();
+
+                Console.WriteLine();
+                Console.WriteLine($"DICE MASTER: Good choice. I quite like the colour {die1.Colour.ToString()}");
+                Console.WriteLine("              Now it's my turn.");
+
+
+                if (diceColours.Contains(die1.Colour))
+                {
+                    diceColours.Remove(die1.Colour);
+                }
+
+                colourIndex = generator.Next(0, diceColours.Count);
+                die2.Colour = diceColours[colourIndex];
+
+                Console.WriteLine($"DICE MASTER: Hmm.... I think I'll choose {die2.Colour.ToString()}");
+                Console.WriteLine($"DICE MASTER: I think it's time to roll the dice...");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("The Dice Master is ready. Press any key to start the game!");
+                Console.ReadLine();
+
+                die1.RollDie();
+                die2.RollDie();
+
+                dieTotal = die1.Roll + die2.Roll;
+
+                if (houseAngerPoints > 0)
+                {
+                    if (dieTotal % 2 != 0)
+                    {
+                        for (int i = 0; i < houseAngerPoints; i++)
+                        {
+                            die1.RollDie();
+                            die2.RollDie();
+                        }
+                    }
+
+                }
+
+                dieTotal = die1.Roll + die2.Roll;
                 if (dieTotal % 2 != 0)
                 {
-                    for (int i = 0; i < houseAngerPoints; i++)
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine($"You rolled a {die1.Roll}");
+                    die1.DrawRoll();
+                    Console.WriteLine($"The Dice Master rolled a {die2.Roll}");
+                    die2.DrawRoll();
+                    Console.WriteLine($"The House Forfeits. You scored an Odd Sum!");
+
+                    Console.WriteLine("DICE MASTER: Hmm...unexpected...");
+                    Console.WriteLine("             It appears luck is on your side today...");
+                    Console.WriteLine("             It looks like I've been bested.");
+                    Console.WriteLine("             Very well, you have won this round.");
+                    Console.WriteLine("             I shall honor your victory... this time.");
+                    Console.WriteLine("             You are free to leave... for now.");
+                    Console.WriteLine();
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine("You have won this round, but be careful");
+                    Console.WriteLine("The Dice Master is growing angrier...");
+
+                    wallet += 0.5 * (oddSumBet);
+                    wins += 1;
+                    houseAngerPoints += 4;
+                }
+
+                else
+                {
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine($"You rolled a {die1.Roll}");
+                    die1.DrawRoll();
+                    Console.WriteLine($"The Dice Master rolled a {die2.Roll}");
+                    die2.DrawRoll();
+                    Console.WriteLine("The House Prevails. You scored Even Sums! How unlucky.");
+                    Console.WriteLine("DICE MASTER: Hahaha! Foolish mortal!");
+                    Console.WriteLine("             Did you really think you could best me?");
+                    Console.WriteLine("             You thought you could beat THE DICE MASTER?!");
+                    Console.WriteLine("             Care for another round? I'm just getting started!");
+                    Console.WriteLine("             In the meantime, I'll take what I'm owed.");
+                    Console.WriteLine("==============================================================");
+                    Console.WriteLine("You have lost this round, but do not give up!");
+                    Console.WriteLine("The Dice Master can be beaten...");
+                    Console.WriteLine("Losing only makes you stronger! He's less angry, less vengeful");
+
+                    wallet -= oddSumBet;
+                    losses += 1;
+                    if (houseAngerPoints > 0)
+                        houseAngerPoints -= 1;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("DICE MASTER: My offer still stands");
+                Console.WriteLine("             Care for another round?");
+                Console.WriteLine();
+                Console.Write("Press y followed by the enter key to play again, or any other key to exit to the Gambler's Den: ");
+                userChoice = Console.ReadLine();
+                userChoice = userChoice.ToLower().Trim();
+                if (userChoice != "y")
+                {
+                    ongoingGame = false;
+                    Console.WriteLine("DICE MASTER: Very well. Return when you are");
+                    Console.WriteLine("             ready to test your luck again.");
+                    Console.WriteLine("===============================================================");
+                    if (wins >= 1)
                     {
-                        die1.RollDie();
-                        die2.RollDie();
+                        Console.WriteLine("Congratulations on your victory!");
+                        Console.WriteLine("You may now leave the Gambler's Den if you so choose.");
+                        Console.WriteLine("Press any key to exit the Dice House");
+                        Console.ReadLine();
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        Console.WriteLine("You have yet to best the Dice Master.");
+                        Console.WriteLine("Return when you are ready to test your luck again.");
+                        Console.WriteLine("DICE MASTER: I'm waiting... I'll see you soon...");
+                        Console.WriteLine("Press any key to exit the Dice House");
+                        Console.ReadLine();
+                        Console.Clear();
                     }
                 }
 
-            }
+                else if (userChoice == "y")
+                {
+                    Console.Clear();
+                    Console.WriteLine("DICE MASTER: Excellent! Let us begin another round!");
+                    Console.WriteLine("===============================================================");
+                    Console.WriteLine("Prepare yourself...");
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
 
-            dieTotal = die1.Roll + die2.Roll;
-            if (dieTotal % 2 != 0)
-            {
-                wallet += doublesBet;
-                wins += 1;
-                houseAngerPoints += 4;
-            }
-
-            else
-            {
-                wallet -= doublesBet;
-                losses += 1;
-                if (houseAngerPoints > 0)
-                    houseAngerPoints -= 1;
+                if (wallet <= 0)
+                {
+                    ongoingGame = false;
+                    gameOver = true;
+                    Console.WriteLine("DICE MASTER: It appears you have run out of funds...");
+                    Console.WriteLine("             Perhaps next time you'll be luckier.");
+                    Console.WriteLine("===============================================================");
+                    Console.WriteLine("You have run out of money...");
+                    Console.WriteLine("The Dice Master has thrown you out of the Gambler's Den");
+                    Console.WriteLine("Better luck next time...");
+                    Console.WriteLine("GAME OVER");
+                    Environment.Exit(0);
+                }
             }
         }
 
@@ -567,9 +1284,6 @@ namespace _4U_1_6_Dice_Summative
             }
         }
 
-
-
-
         public static void Rules()
         {
             string userChoice;
@@ -606,6 +1320,8 @@ namespace _4U_1_6_Dice_Summative
             Console.WriteLine("4) Betting on odd sums will win your full bet");
             Console.WriteLine();
             Console.WriteLine("5) Incorrect results will result in a lost bet");
+            Console.WriteLine();
+            Console.WriteLine("6) Minimum bet is 7% of your current wallet");
             Console.WriteLine("==================================================================");
             Console.Write("Press r followed by the enter key to return to the Gambler's Den: ");
             userChoice = Console.ReadLine();
@@ -621,13 +1337,31 @@ namespace _4U_1_6_Dice_Summative
                 Console.WriteLine("Few! That was close! Do not anger the Dice Master!");
                 Console.WriteLine("The angrier the Dice Master, the harder it is to win!");
                 Console.WriteLine("...Good Luck.");
+                Console.WriteLine("=============================================================");
+                Console.WriteLine("Press any key to return to the Gambler's Den");
+                Console.ReadLine();
+                Console.Clear();
             }
             else
             {
                 Console.Clear();
             }
         }
-    }  
 
+        public static void Stats()
+        {
+            Console.Title = "The Gambler's Den || Player Stats";
+            Console.WriteLine(Console.Title);
+            Console.WriteLine("===================================");
+            Console.WriteLine($"Current Wallet: {wallet.ToString("C")}");
+            Console.WriteLine($"Total Wins: {wins}");
+            Console.WriteLine($"Total Losses: {losses}");
+            Console.WriteLine($"Current House Anger Points: {houseAngerPoints}");
+            Console.WriteLine("===================================");
+            Console.WriteLine("Press any key to return to the Gambler's Den");
+            Console.ReadLine();
+            Console.Clear();
+        }
+    }
 
 }
