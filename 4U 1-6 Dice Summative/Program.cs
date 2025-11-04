@@ -57,15 +57,19 @@ namespace _4U_1_6_Dice_Summative
 
                 if (strUserChoice != "w")
                 {
-                    wallet = 100;
+                    wallet += 100;
                     walletSetUpComplete = true;
+                    Console.Clear();
                     Console.WriteLine("DICE MASTER: You were unable to follow a simple instruction?!");
-                    Console.WriteLine($"             Your wallet has been set to {wallet}");
+                    Console.WriteLine($"             Your wallet has been set to {wallet.ToString("C")}");
                     Console.WriteLine("=============================================================");
                     Console.WriteLine("Oh No! You've angered the Dice Master!");
                     Console.WriteLine("The angrier the Dice Master, the harder it is to win!");
                     Console.WriteLine("...Good Luck.");
                     houseAngerPoints += 3;
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadLine();
+                    Console.Clear();
                 }
 
                 else
@@ -87,11 +91,20 @@ namespace _4U_1_6_Dice_Summative
                 Console.WriteLine("6) Stats");
                 if (wins >= 1)
                     Console.WriteLine("7) Escape");
+                Console.WriteLine("===========================================================");
+                Console.WriteLine();
+                Console.Write("Enter the number of your requested game:");
 
                 while (!int.TryParse(Console.ReadLine(), out userChoice) || userChoice < 1 || userChoice > 7 || (userChoice == 7 && wins < 1))
                 {
                     Console.WriteLine("DICE MASTER: You were unable to follow a SIMPLE instruction?!");
-                    Console.WriteLine($"            Its a NUMBER between 1 AND 7! Try again");
+
+                    if (userChoice == 7 && wins < 1)
+                    {
+                        Console.WriteLine($"            Its a NUMBER between 1 AND 6! Try again");
+                    }
+                    else
+                        Console.WriteLine($"            Its a NUMBER between 1 AND 7! Try again");
                     Console.WriteLine("===========================================================");
                     Console.WriteLine("Oh No! You've angered the Dice Master!");
                     Console.WriteLine("The angrier the Dice Master, the harder it is to win!");
@@ -147,7 +160,7 @@ namespace _4U_1_6_Dice_Summative
                         {
                             Console.Clear();
                             if (wins >= 1)
-                            {
+                            {                                
                                 Console.WriteLine("DICE MASTER: So, you think you can just leave after");
                                 Console.WriteLine("             besting me? Hahaha! Very well, leave");
                                 Console.WriteLine("             while you still can...");
@@ -222,7 +235,7 @@ namespace _4U_1_6_Dice_Summative
             {
                 case "1":
                     {
-                        wallet = 100.00;
+                        wallet += 100.00;
                         Console.WriteLine($"Success! Your wallet now contains ${wallet}!");
                         Console.WriteLine("You are ready to gamble!");
                         Console.WriteLine("Press any key to continue");
@@ -234,7 +247,7 @@ namespace _4U_1_6_Dice_Summative
 
                 case "2":
                     {
-                        wallet = 250.00;
+                        wallet += 250.00;
                         Console.WriteLine($"Success! Your wallet now contains ${wallet}!");
                         Console.WriteLine("You are ready to gamble!");
                         Console.WriteLine("Press any key to continue");
@@ -246,7 +259,7 @@ namespace _4U_1_6_Dice_Summative
 
                 case "3":
                     {
-                        wallet = 500.00;
+                        wallet += 500.00;
                         Console.WriteLine($"Success! Your wallet now contains ${wallet}!");
                         Console.WriteLine("You are ready to gamble!");
                         Console.WriteLine("Press any key to continue");
@@ -264,6 +277,7 @@ namespace _4U_1_6_Dice_Summative
                         {
                             if (addMoney < 0)
                             {
+                                Console.Clear();
                                 Console.WriteLine("DICE MASTER: You were unable to follow a simple instruction?!");
                                 Console.WriteLine($"            You cannot enter a negitive number in your wallet!");
                                 Console.WriteLine("             Try again!");
@@ -277,6 +291,7 @@ namespace _4U_1_6_Dice_Summative
                             }
                             else if (addMoney > 500)
                             {
+                                Console.Clear();
                                 Console.WriteLine("DICE MASTER: You were unable to follow a simple instruction?!");
                                 Console.WriteLine($"            You cannot enter a number which exceeds the");
                                 Console.WriteLine("             wallet threshold! Try again!");
@@ -291,6 +306,7 @@ namespace _4U_1_6_Dice_Summative
 
                             else
                             {
+                                Console.Clear();
                                 Console.WriteLine("DICE MASTER: You were unable to follow a simple instruction?!");
                                 Console.WriteLine($"            That is NOT a number? Do you perchance have a");
                                 Console.WriteLine("             brain? Try again!");
@@ -306,6 +322,7 @@ namespace _4U_1_6_Dice_Summative
 
                         wallet += addMoney;
 
+                        Console.Clear();
                         Console.WriteLine("DICE MASTER: I doubted your abilites at first, but I'm");
                         Console.WriteLine($"            pleasently supprised! Good work.");
                         Console.WriteLine("===============================================================");
@@ -370,8 +387,6 @@ namespace _4U_1_6_Dice_Summative
 
             while (ongoingGame)
             {
-
-
                 Console.WriteLine(Console.Title);
                 Console.WriteLine("============================");
                 Console.WriteLine("Welcome to the Gambler's Den. You have bet on Doubles");
@@ -518,11 +533,14 @@ namespace _4U_1_6_Dice_Summative
                 if (userChoice != "y")
                 {
                     ongoingGame = false;
+                    Console.Clear();
                     Console.WriteLine("DICE MASTER: Very well. Return when you are");
                     Console.WriteLine("             ready to test your luck again.");
                     Console.WriteLine("===============================================================");
                     if (wins >= 1)
                     {
+
+                        Console.WriteLine($"You have {wins} win(s)");
                         Console.WriteLine("Congratulations on your victory!");
                         Console.WriteLine("You may now leave the Gambler's Den if you so choose.");
                         Console.WriteLine("Press any key to exit the Dice House");
@@ -742,11 +760,13 @@ namespace _4U_1_6_Dice_Summative
                 if (userChoice != "y")
                 {
                     ongoingGame = false;
+                    Console.Clear();
                     Console.WriteLine("DICE MASTER: Very well. Return when you are");
                     Console.WriteLine("             ready to test your luck again.");
                     Console.WriteLine("===============================================================");
                     if (wins >= 1)
                     {
+                        Console.WriteLine($"You have {wins} win(s)");
                         Console.WriteLine("Congratulations on your victory!");
                         Console.WriteLine("You may now leave the Gambler's Den if you so choose.");
                         Console.WriteLine("Press any key to exit the Dice House");
@@ -969,11 +989,13 @@ namespace _4U_1_6_Dice_Summative
                 if (userChoice != "y")
                 {
                     ongoingGame = false;
+                    Console.Clear();
                     Console.WriteLine("DICE MASTER: Very well. Return when you are");
                     Console.WriteLine("             ready to test your luck again.");
                     Console.WriteLine("===============================================================");
                     if (wins >= 1)
                     {
+                        Console.WriteLine($"You have {wins} win(s)");
                         Console.WriteLine("Congratulations on your victory!");
                         Console.WriteLine("You may now leave the Gambler's Den if you so choose.");
                         Console.WriteLine("Press any key to exit the Dice House");
@@ -1194,11 +1216,14 @@ namespace _4U_1_6_Dice_Summative
                 if (userChoice != "y")
                 {
                     ongoingGame = false;
+                    Console.Clear();
                     Console.WriteLine("DICE MASTER: Very well. Return when you are");
                     Console.WriteLine("             ready to test your luck again.");
                     Console.WriteLine("===============================================================");
                     if (wins >= 1)
                     {
+
+                        Console.WriteLine($"You have {wins} win(s)");
                         Console.WriteLine("Congratulations on your victory!");
                         Console.WriteLine("You may now leave the Gambler's Den if you so choose.");
                         Console.WriteLine("Press any key to exit the Dice House");
@@ -1329,8 +1354,7 @@ namespace _4U_1_6_Dice_Summative
 
             if (userChoice != "r")
             {
-                wallet = 100;
-                walletSetUpComplete = true;
+                Console.Clear();
                 Console.WriteLine("DICE MASTER: You were unable to follow a simple instruction?!");
                 Console.WriteLine("             I'll let you off easy...this time.");
                 Console.WriteLine("=============================================================");
